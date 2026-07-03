@@ -1,0 +1,22 @@
+{
+  "name": "chorus-pay-connector-template",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Template de connecteur Chorus Pay — clonez, renommez, implémentez",
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "node scripts/test.mjs",
+    "build": "node scripts/build.mjs",
+    "sign": "node scripts/sign.mjs dist",
+    "verify": "node scripts/verify.mjs"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "adm-zip": "^0.5.16",
+    "esbuild": "^0.28.0",
+    "tsx": "^4.22.0",
+    "typescript": "^5.6.0",
+    "zod": "^3.25.0"
+  }
+}

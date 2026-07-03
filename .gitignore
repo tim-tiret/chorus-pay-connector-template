@@ -1,0 +1,5 @@
+node_modules/
+dist/
+*.pem
+*.connector-key
+.DS_Store
