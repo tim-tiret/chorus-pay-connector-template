@@ -6,39 +6,34 @@
  * Usage : npm test
  */
 import { spawnSync } from "child_process";
-import { writeFileSync, mkdtempSync } from "fs";
-import os from "os";
+import { writeFileSync, rmSync } from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
+// Le runner est écrit DANS le repo (et non dans /tmp) pour que la résolution
+// de node_modules (@chorus-pay/*) fonctionne comme pour n'importe quel import.
+const runnerPath = path.join(repoRoot, ".conformance-runner.mts");
 const runner = `
-import connector from "${pathForImport(path.join(repoRoot, "index.ts"))}";
-import { runConformance } from "@/lib/connector-testkit";
+import connector from "./index.ts";
+import { runConformance } from "@chorus-pay/connector-testkit";
 
-async function main() {
-  const report = await runConformance(connector);
-  console.log(\`\${report.ok ? "✅" : "❌"} \${report.connector}\`);
-  for (const issue of report.issues) {
-    console.log(\`   \${issue.level === "error" ? "✗" : "⚠"} [\${issue.check}] \${issue.message}\`);
-  }
-  if (!report.ok) process.exit(1);
+const report = await runConformance(connector);
+console.log(\`\${report.ok ? "✅" : "❌"} \${report.connector}\`);
+for (const issue of report.issues) {
+  console.log(\`   \${issue.level === "error" ? "✗" : "⚠"} [\${issue.check}] \${issue.message}\`);
 }
-main().catch((e) => { console.error(e); process.exit(1); });
+if (!report.ok) process.exit(1);
 `;
 
-function pathForImport(p) {
-  return "file://" + p.replace(/\\/g, "/");
-}
-
-const tmpDir = mkdtempSync(path.join(os.tmpdir(), "connector-test-"));
-const runnerPath = path.join(tmpDir, "runner.ts");
 writeFileSync(runnerPath, runner);
-
-const result = spawnSync(
-  "npx",
-  ["tsx", "--tsconfig", path.join(repoRoot, "tsconfig.json"), runnerPath],
-  { cwd: repoRoot, stdio: "inherit" }
-);
-process.exit(result.status ?? 1);
+try {
+  const result = spawnSync("npx", ["tsx", runnerPath], {
+    cwd: repoRoot,
+    stdio: "inherit",
+  });
+  process.exitCode = result.status ?? 1;
+} finally {
+  rmSync(runnerPath, { force: true });
+}

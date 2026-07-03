@@ -8,14 +8,7 @@
     "strict": false,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "noEmit": true,
-    "baseUrl": ".",
-    "paths": {
-      "@/lib/connector-sdk": ["./sdk/index.ts"],
-      "@/lib/connector-sdk/*": ["./sdk/*"],
-      "@/lib/connector-testkit": ["./testkit/index.ts"],
-      "@/lib/connector-testkit/*": ["./testkit/*"]
-    }
+    "noEmit": true
   },
   "include": ["**/*.ts"],
   "exclude": ["node_modules", "dist"]

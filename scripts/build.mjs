@@ -37,18 +37,11 @@ async function main() {
     console.error("Le bundle n'exporte pas un connecteur (export default defineConnector)");
     process.exit(1);
   }
-  const cron = {};
-  for (const [name, job] of Object.entries(def.cron ?? {})) {
-    cron[name] = { every: job.every, ...(job.timeoutMs ? { timeoutMs: job.timeoutMs } : {}) };
-  }
-  const defineSrc = await fs.readFile(path.join(repoRoot, "sdk/define.ts"), "utf8");
-  const sdkVersion = defineSrc.match(/SDK_VERSION = "([^"]+)"/)?.[1] ?? "1.0.0";
+  // serializeManifest (du SDK npm) produit le manifest tel que stocké dans le
+  // zip : manifest + plannings cron + version du SDK utilisée.
+  const { serializeManifest } = await import("@chorus-pay/connector-sdk");
   const manifestJson = Buffer.from(
-    JSON.stringify(
-      { ...def.manifest, ...(Object.keys(cron).length > 0 ? { cron } : {}), sdkVersion },
-      null,
-      2
-    ),
+    JSON.stringify(serializeManifest(def), null, 2),
     "utf8"
   );
   await fs.writeFile(path.join(out, "manifest.json"), manifestJson);

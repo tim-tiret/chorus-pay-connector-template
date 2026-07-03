@@ -11,7 +11,11 @@
     "sign": "node scripts/sign.mjs dist",
     "verify": "node scripts/verify.mjs"
   },
+  "dependencies": {
+    "@chorus-pay/connector-sdk": "^1.0.1"
+  },
   "devDependencies": {
+    "@chorus-pay/connector-testkit": "^1.0.1",
     "@types/node": "^22.0.0",
     "adm-zip": "^0.5.16",
     "esbuild": "^0.28.0",

@@ -3,3 +3,4 @@ dist/
 *.pem
 *.connector-key
 .DS_Store
+package-lock.json

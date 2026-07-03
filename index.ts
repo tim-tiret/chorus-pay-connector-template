@@ -3,13 +3,13 @@ import {
   defineConnector,
   type ConnectorCtx,
   type ErpInvoiceResult,
-} from "@/lib/connector-sdk";
+} from "@chorus-pay/connector-sdk";
 
 /**
  * Template de connecteur Chorus Pay — voir doc/connectors/CREATE_CONNECTOR.md.
  *
  * Règles d'or (spec §2) :
- * - N'importer QUE `@/lib/connector-sdk` (jamais la DB, le storage, les libs
+ * - N'importer QUE `@chorus-pay/connector-sdk` (jamais la DB, le storage, les libs
  *   internes de l'app) — tout I/O passe par le `ctx`.
  * - Aucune variable mutable au niveau module (le module est partagé entre
  *   tous les fournisseurs) : l'état va dans `ctx.kv` / `ctx.config.update`.
