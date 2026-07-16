@@ -29,13 +29,13 @@ npm run build      # → dist/<id>-<version>.zip
 | Chemin | Rôle |
 |---|---|
 | `index.ts` | Votre connecteur (`export default defineConnector({...})`) |
-| `sdk/` | Le SDK Chorus Pay (contrat `ctx`, `defineConnector`, `cf.*`) — ne pas modifier |
-| `testkit/` | Kit de conformité + mock du `ctx` pour vos tests |
+| `@chorus-pay/connector-sdk` (npm) | Le SDK Chorus Pay (contrat `ctx`, `defineConnector`, `cf.*`) |
+| `@chorus-pay/connector-testkit` (npm) | Kit de conformité + mock du `ctx` pour vos tests |
 | `scripts/` | build (bundle + zip), test (conformité), sign/verify (signature) |
 
 ## Règles essentielles
 
-1. **N'importer que le SDK** (`@/lib/connector-sdk`) — tout passe par le `ctx`.
+1. **N'importer que le SDK** (`@chorus-pay/connector-sdk`) — tout passe par le `ctx`.
 2. **Pas d'état global mutable** : le module est partagé entre tous les comptes.
 3. **Jamais planter** sur une config invalide : retourner `{ success: false, error }`.
 4. **Montants arrondis au centime** (`Math.round(x * 100) / 100`) — Chorus Pro
